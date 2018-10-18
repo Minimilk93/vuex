@@ -8,21 +8,27 @@
       >{{product.title}} - {{product.price | currency}} - {{product.quantity}}</li>
     </ul>
     <p>Total: {{total | currency}}</p>
-    <button @click="$store.dispatch('checkout')">Checkout</button>
-    <p v-if="$store.state.checkoutStatus">{{$store.state.checkoutStatus}}</p>
+    <button @click="checkout">Checkout</button>
+    <p v-if="checkoutStatus">{{checkoutStatus}}</p>
   </div>
 </template>
 
 <script>
+  import {mapState, mapGetters, mapActions} from 'vuex'
   export default {
     computed: {
-      products () {
-        return this.$store.getters.cartProducts
-      },
+      ...mapGetters('cart', {
+        products: 'cartProducts',
+        total: 'cartTotal'
+      }),
 
-      total () {
-        return this.$store.getters.cartTotal
-      }
+      ...mapState('cart', {
+        checkoutStatus: state => state.checkoutStatus
+      })
+    },
+
+    methods: {
+      ...mapActions('cart', ['checkout'])
     }
   }
 </script>
